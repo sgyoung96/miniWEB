@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="vacation">
+	<!--  	휴가신청 -->
+	<insert id="insertRegVacation" parameterType="paramMap">
+        INSERT INTO TB_ATTDNC 
+        					(
+        					 ATT_NO, 
+        					 ATT_DT,
+        					 ATT_DTTM,
+        					 ATT_STAT_CD,
+        					 USER_NO,
+        					 CORP_NO
+        					 )
+        					
+            		 VALUES (
+            		 		 ATT_SEQ.nextval, 
+            		 		 #{ATT_DT}, 
+            		 		 TO_CHAR(SYSDATE, 'YYYY-MM-DD'),
+            		 		 '4',
+            		 		 #{USER_NO},
+            		 		 #{CORP_NO}
+            		 		 )
+    </insert>
+    
+    <select id="selectApprovalList" parameterType="paramMap" resultType="resultMap">
+		SELECT
+			  AD.ATT_NO,
+			  TO_CHAR(AD.ATT_DT, 'YYYY-MM-DD') AS ATT_DT,
+			  TO_CHAR(AD.ATT_DTTM, 'YYYY-MM-DD') AS ATT_DTTM,
+			  AD.USER_NO,
+			  U.USER_NM,
+			  AD.CORP_NO,
+			  C.CORP_NM
+		 FROM TB_ATTDNC AD
+		 LEFT OUTER JOIN TB_USER U ON AD.USER_NO = U.USER_NO
+		 LEFT OUTER JOIN TB_CORP C ON AD.CORP_NO = C.CORP_NO
+		WHERE ATT_STAT_CD = '4'
+	    ORDER BY ATT_NO DESC
+	</select>
+	
+	<select id="getApprovalList" parameterType="paramMap" resultType="resultMap">
+		SELECT
+			  AD.ATT_NO,
+			  TO_CHAR(AD.ATT_DT, 'YYYY-MM-DD') AS ATT_DT,
+			  TO_CHAR(AD.ATT_DTTM, 'YYYY-MM-DD') AS ATT_DTTM,
+			  AD.USER_NO,
+			  U.DEPT_NM,
+			  U.USER_RK,
+			  U.USER_NM,
+			  AD.CORP_NO,
+			  C.CORP_NM
+		 FROM TB_ATTDNC AD
+		 LEFT OUTER JOIN TB_USER U ON AD.USER_NO = U.USER_NO
+		 LEFT OUTER JOIN TB_CORP C ON AD.CORP_NO = C.CORP_NO
+		WHERE ATT_STAT_CD = '4'
+		  AND C.CORP_NO = #{CORP_NO}
+	    ORDER BY ATT_NO DESC
+	</select>
+	
+	<update id="acptVacation" parameterType="paramMap">
+		UPDATE TB_ATTDNC SET ATT_STAT_CD = 5
+ 		 WHERE ATT_NO = #{ATT_NO}
+	</update>
+	
+	
+</mapper>

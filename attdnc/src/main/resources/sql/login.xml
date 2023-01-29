@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="login">
+
+	<select id="selectLoginInfo" parameterType="paramMap" resultType="resultMap">
+		SELECT * FROM TB_USER
+	</select>   
+	
+	<!-- 아이디 정보 유무 확인 -->
+	<select id="selectUserId" parameterType="paramMap" resultType="resultMap">
+		SELECT COUNT(*) AS USER_CNT 
+		  FROM TB_USER 
+		 WHERE USER_ID = #{USER_ID}
+	</select>
+	
+	<!-- 패스워드 일치 여부 확인 -->
+	<select id="isMatchUserPw" parameterType="paramMap" resultType="resultMap">
+		SELECT COUNT(*) AS USER_CNT 
+		  FROM TB_USER 
+		 WHERE USER_ID = #{USER_ID} 
+		   AND USER_PW = #{USER_PW}
+	</select>      
+	
+	<!-- 승인 현황 조회 -->
+	<select id="selectAcptState" parameterType="paramMap" resultType="resultMap">
+		SELECT ACPT_CD
+		  FROM TB_USER 
+		 WHERE USER_ID = #{USER_ID}
+	</select>
+	
+	<select id="getUserInfo" parameterType="paramMap" resultType="resultMap">
+		SELECT * 
+		  FROM TB_USER 
+		 WHERE USER_ID = #{USER_ID}
+	</select>
+	     
+</mapper>

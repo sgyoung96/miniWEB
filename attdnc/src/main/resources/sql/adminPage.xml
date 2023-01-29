@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="admin">
+
+	<select id="getAllUserByCorp" parameterType="paramMap" resultType="resultMap">
+	SELECT /* 회사별 최고관리자 혹은 권한상승이 필요한 부서장과 일반 직원들 */
+			A.USER_NO, 			-- 회원번호
+			A.USER_ID, 			-- 회원아이디
+			A.USER_PW, 			-- 비밀번호
+			A.USER_NM, 			-- 이름
+			A.CORP_NO, 			-- 회사 고유번호
+			A.DEPT_NM, 			-- 부서
+			A.USER_RK, 			-- 직급
+			A.USER_EMAIL, 		-- 이메일
+			A.USER_TEL_NO, 		-- 사내연락처
+			A.USER_PHONE_NO, 	-- 개인연락처
+			A.USER_IMG_PATH, 	-- 사진경로
+			A.USER_AN, 			-- 연차
+			A.USER_JOIN_DT, 	-- 입사일자
+			A.USER_LV_DT, 		-- 퇴사일자
+			A.USER_LV_YN, 		-- 퇴사여부
+			A.REG_DT, 			-- 등록일자
+			A.MOD_DTTM, 		-- 수정일시
+			A.ACPT_CD, 			-- 승인단계코드
+			A.AUTH_CD, 			-- 권한등급코드
+			A.USE_YN, 			-- 사용여부
+			COUNT(A.USER_NO) AS CNT, -- 인원수
+	        B.CORP_NM			-- 회사명
+	  FROM TB_USER A, TB_CORP B
+	 WHERE A.AUTH_CD = 'B04' -- 일반
+	   AND A.ACPT_CD = 'A02' -- A02: 승인, A03: 반려
+	   AND A.CORP_NO = B.CORP_NO
+	   AND A.CORP_NO = #{CORP_NO}
+	 GROUP BY A.USER_NO, A.USER_ID, A.USER_PW, A.USER_NM,
+	          A.CORP_NO, A.DEPT_NM, A.USER_RK, A.USER_EMAIL,
+	          A.USER_TEL_NO, A.USER_PHONE_NO, A.USER_IMG_PATH,
+	          A.USER_AN, A.USER_JOIN_DT, A.USER_LV_DT, A.USER_LV_YN,
+	          A.REG_DT, A.MOD_DTTM, A.ACPT_CD, A.AUTH_CD, A.USE_YN,
+	          B.CORP_NM
+	</select>
+	
+	
+	<update id="updateUserAuthType" parameterType="paramMap">
+			UPDATE TB_USER 
+			   SET AUTH_CD = 'B03' 
+			 WHERE AUTH_CD = 'B04'
+			   AND USER_NO = #{USER_NO}
+	</update>
+	
+</mapper>
+
+

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="register">
+
+	<!--  	사업자등록번호 중복 체크 -->
+	<select id="selectChkCorpNoCount" parameterType="paramMap" resultType="resultMap">
+		SELECT COUNT(*) AS CORP_CNT
+		  FROM TB_CORP
+		 WHERE CORP_REG_NO = #{CORP_NO}
+	</select>
+	
+	<!--  	관리자 아이디 중복 체크 -->
+	<select id="selectAdminUserIdChkCount" parameterType="paramMap" resultType="resultMap">
+		SELECT COUNT(*) AS USER_CNT 
+		  FROM TB_USER 
+		 WHERE USER_ID = #{USER_ID}
+	</select>
+	
+	<!--  	기업회원가입신청 -->
+	<insert id="insertRegCorp" parameterType="paramMap">
+        INSERT INTO TB_CORP 
+        					(
+        					 CORP_NO, 
+        					 CORP_NM, 
+        					 CORP_CEO_NM, 
+        					 CORP_REG_NO, 
+        					 CORP_ADDR, 
+        					 CORP_TEL_NO, 
+        					 CORP_CEO_PHONE_NO, 
+        					 CORP_EMAIL, 
+        					 CORP_CEO_EMAIL, 
+        					 REG_NM, 
+        					 MOD_NM, 
+        					 REG_DT, 
+        					 MOD_DTTM, 
+        					 ACPT_CD
+        					 )
+        					
+            		 VALUES (
+            		 		 CORP_SEQ.nextval, 
+            		 		 #{CORP_NM}, 
+            		 		 #{CORP_CEO_NM}, 
+            		 		 #{CORP_REG_NO}, 
+            		 		 '주소없음', 
+            		 		 #{CORP_TEL_NO}, 
+            		 		 #{CORP_CEO_PHONE_NO}, 
+            		 		 #{CORP_EMAIL}, 
+            		 		 #{CORP_CEO_EMAIL}, 
+            		 		 '등록자없음', 
+            		 		 '수정자없음', 
+            		 		 TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 
+            		 		 TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 
+            		 		 'A01'
+            		 		 )
+    </insert>
+    
+    <!--   신청 기업 정보 들고오기   -->
+    <select id="getCorpNo" parameterType="paramMap" resultType="resultMap">
+		SELECT CORP_NO
+		  FROM TB_CORP
+		 WHERE CORP_REG_NO = #{CORP_REG_NO}
+	</select>
+    
+    <!--   기업관리자 정보 삽입   -->
+   	<insert id="insertRegAdmin" parameterType="paramMap">
+		INSERT INTO TB_USER (
+							 USER_NO, 
+							 USER_ID, 
+							 USER_PW, 
+							 USER_NM, 
+							 CORP_NO, 
+							 DEPT_NM, 
+							 USER_RK, 
+							 USER_EMAIL, 
+							 USER_TEL_NO, 
+							 USER_PHONE_NO, 
+							 USER_IMG_PATH, 
+							 USER_AN, 
+							 USER_JOIN_DT, 
+							 USER_LV_DT, 
+							 USER_LV_YN, 
+							 REG_DT, 
+							 MOD_DTTM, 
+							 ACPT_CD, 
+							 AUTH_CD, 
+							 USE_YN
+							 )
+            
+            		 VALUES (
+            		 		 USER_SEQ.nextval, 
+            		 		 #{USER_ID}, 
+            		 		 #{USER_PW}, 
+            		 		 #{USER_NM}, 
+            		 		 #{CORP_NO}, 
+            		 		 #{DEPT_NM}, 
+            		 		 #{USER_RK}, 
+            		 		 #{USER_EMAIL}, 
+            		 		 '0312223333', 
+            		 		 '01044445555', 
+            		 		 '이미지경로없음', 
+            		 		 1, 
+            		 		 TO_DATE(TO_CHAR(SYSDATE, 'YYYYMMDD')), 
+            		 		 '', 
+            		 		 'N', 
+            		 		 TO_DATE(TO_CHAR(SYSDATE, 'YYYYMMDD')), 
+            		 		 TO_DATE(TO_CHAR(SYSDATE, 'YYYYMMDD')), 
+            		 		 'A01', 
+            		 		 'B02', 
+            		 		 'Y'
+            		 		 )
+        
+    </insert>
+    
+    <!--  	유저 아이디 중복 체크 -->
+	<select id="chkUserId" parameterType="paramMap" resultType="resultMap">
+		SELECT COUNT(*) AS USER_CNT 
+		  FROM TB_USER 
+		 WHERE USER_ID = #{USER_ID}
+	</select>
+	
+	<!--   신청 기업 정보 들고오기   -->
+    <select id="getCorpNoByName" parameterType="paramMap" resultType="resultMap">
+		SELECT CORP_NO
+		  FROM TB_CORP
+		 WHERE CORP_NM = #{CORP_NM}
+	</select>
+	
+	<!--   임직원 가입 정보 삽입   -->
+   	<insert id="regUser" parameterType="paramMap">
+		INSERT INTO TB_USER (
+							 USER_NO, 
+							 USER_ID, 
+							 USER_PW, 
+							 USER_NM, 
+							 CORP_NO, 
+							 DEPT_NM, 
+							 USER_RK, 
+							 USER_EMAIL, 
+							 USER_TEL_NO, 
+							 USER_PHONE_NO, 
+							 USER_IMG_PATH, 
+							 USER_AN, 
+							 USER_JOIN_DT, 
+							 USER_LV_DT, 
+							 USER_LV_YN, 
+							 REG_DT, 
+							 MOD_DTTM, 
+							 ACPT_CD, 
+							 AUTH_CD, 
+							 USE_YN
+							 )
+            
+            		 VALUES (
+            		 		 USER_SEQ.nextval, 
+            		 		 #{USER_ID}, 
+            		 		 #{USER_PW}, 
+            		 		 #{USER_NM}, 
+            		 		 #{CORP_NO}, 
+            		 		 #{DEPT_NM}, 
+            		 		 #{USER_RK}, 
+            		 		 #{USER_EMAIL}, 
+            		 		 '0312223333', 
+            		 		 '01044445555', 
+            		 		 '이미지경로없음', 
+            		 		 1, 
+            		 		 TO_DATE(TO_CHAR(SYSDATE, 'YYYYMMDD')), 
+            		 		 '', 
+            		 		 'N', 
+            		 		 TO_DATE(TO_CHAR(SYSDATE, 'YYYYMMDD')), 
+            		 		 TO_DATE(TO_CHAR(SYSDATE, 'YYYYMMDD')), 
+            		 		 'A01', 
+            		 		 'B04', 
+            		 		 'Y'
+            		 		 )
+        
+    </insert>
+
+</mapper>
